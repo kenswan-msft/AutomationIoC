@@ -9,9 +9,9 @@ namespace AutomationIoC.CommandLine.Binder;
 
 internal static class ServiceBinder<T>
 {
-    public static T GetBoundValue(IServiceBinderActivator serviceBinderActivator)
+    public static T GetBoundValue(IAutomationServiceActivator automationServiceActivator)
     {
-        IServiceProvider serviceProvider = serviceBinderActivator.GetServiceProvider();
+        IServiceProvider serviceProvider = automationServiceActivator.GetServiceProvider();
 
         return serviceProvider.GetRequiredService<T>();
     }

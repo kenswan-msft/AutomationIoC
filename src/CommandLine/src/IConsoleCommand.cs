@@ -9,14 +9,16 @@ using System.CommandLine;
 namespace AutomationIoC.CommandLine;
 
 /// <summary>
-/// Command line automation interface used to register/build commands
+///     Command line automation interface used to register/build commands
 /// </summary>
 public interface IConsoleCommand : IAutomationStartup
 {
     /// <summary>
-    /// Set specific command configuration/properties
+    ///     Set specific command configuration/properties
     /// </summary>
-    /// <param name="serviceBinderFactory">Factory used to bind services based on inherited <see cref="IAutomationStartup"/> dependency injection</param>
+    /// <param name="context">
+    ///     Service Container used to bind command line services to actions/handlers
+    /// </param>
     /// <param name="command">Current command context to establish properties, configuration, and attributes</param>
-    void ConfigureCommand(IServiceBinderFactory serviceBinderFactory, Command command);
+    void ConfigureCommand(IAutomationContext context, Command command);
 }

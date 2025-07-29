@@ -3,6 +3,7 @@
 // Licensed under the MIT License
 // -------------------------------------------------------
 
+using AutomationIoC.CommandLine.Binder;
 using AutomationIoC.CommandLine.Builder;
 using System.CommandLine;
 
@@ -22,9 +23,10 @@ public class AutomationConsole
     /// <remarks>If command line arguments are not sent, <see cref="Environment.GetCommandLineArgs" /> will be used instead</remarks>
     public static IAutomationConsoleBuilder CreateDefaultBuilder(string? appDescription = null, string[]? args = null)
     {
-        var rootCommand = new RootCommand(appDescription ?? string.Empty);
+        var automationContext = new AutomationContext(args);
+        var rootCommand = new RootCommand(description: appDescription ?? string.Empty);
 
-        return new AutomationConsoleBuilder(rootCommand, args);
+        return new AutomationConsoleBuilder(rootCommand, automationContext, args);
     }
 
     /// <summary>
@@ -38,12 +40,19 @@ public class AutomationConsole
     public static IAutomationConsoleBuilder CreateDefaultBuilder<T>(
         string? appDescription = null,
         string[]? args = null)
-        where T : IConsoleCommand, new()
+        where T : IAutomationCommand, new()
     {
-        RootCommand rootCommand = new T().Register();
+        var automationContext = new AutomationContext(args);
 
-        rootCommand.Description = appDescription ?? string.Empty;
+        var automationCommand =
+            AutomationCommand.CreateCommand(
+                name: string.Empty,
+                description: appDescription,
+                automationContext,
+                automationCommand: new T());
 
-        return new AutomationConsoleBuilder(rootCommand, args);
+        var rootAutomationCommand = new RootAutomationCommand(automationCommand);
+
+        return new AutomationConsoleBuilder(rootAutomationCommand, automationContext, args);
     }
 }

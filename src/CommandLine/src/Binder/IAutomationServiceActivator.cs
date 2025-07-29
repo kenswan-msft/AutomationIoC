@@ -5,7 +5,7 @@
 
 namespace AutomationIoC.CommandLine.Binder;
 
-internal interface IServiceBinderActivator
+internal interface IAutomationServiceActivator
 {
     IServiceProvider GetServiceProvider();
 }

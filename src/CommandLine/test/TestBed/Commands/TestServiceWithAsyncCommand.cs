@@ -4,47 +4,40 @@
 // -------------------------------------------------------
 
 using AutomationIoC.CommandLine.Test.TestBed.Services;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using System.CommandLine;
 
 namespace AutomationIoC.CommandLine.Test.TestBed.Commands;
 
-internal class TestServiceWithAsyncCommand : StandardCommand
+internal class TestServiceWithAsyncCommand : IAutomationCommand
 {
-    public override void ConfigureCommand(IServiceBinderFactory serviceBinderFactory, Command command)
+    public void Initialize(AutomationCommand command)
     {
-        Option<string> passedInOption = new(name: "--test")
-        {
-            Description = "Description of test option field."
-        };
+        Option<string> passedInOption = new(name: "--test") { Description = "Description of test option field." };
 
         command.Options.Add(passedInOption);
 
-        command.SetAction(async (parseResult, cancellationToken) =>
+        command.SetAction(async (parseResult, automationContext, cancellationToken) =>
         {
             string passedInOptionString = parseResult.GetValue(passedInOption);
+
             await TestExecutionAsync(
-                    serviceBinderFactory.Bind<ITestService>(),
+                    automationContext.ServiceProvider.GetService<ITestService>(),
                     passedInOptionString,
                     cancellationToken)
                 .ConfigureAwait(false);
         });
     }
 
-    public override void Configure(HostBuilderContext hostBuilderContext, IConfigurationBuilder configurationBuilder)
-    {
-        var appSettings = new Dictionary<string, string>
-        {
-            [TestService.CONFIG_KEY] = TestService.CONFIG_VALUE
-        };
-
-        configurationBuilder.AddInMemoryCollection(appSettings);
-    }
-
-    public override void ConfigureServices(HostBuilderContext hostBuilderContext, IServiceCollection services) =>
-        services.AddTransient<ITestService, TestService>();
+    // public override void Configure(HostBuilderContext hostBuilderContext, IConfigurationBuilder configurationBuilder)
+    // {
+    //     var appSettings = new Dictionary<string, string> { [TestService.CONFIG_KEY] = TestService.CONFIG_VALUE };
+    //
+    //     configurationBuilder.AddInMemoryCollection(appSettings);
+    // }
+    //
+    // public override void ConfigureServices(HostBuilderContext hostBuilderContext, IServiceCollection services) =>
+    //     services.AddTransient<ITestService, TestService>();
 
     private static Task TestExecutionAsync(ITestService testService, string data, CancellationToken cancellationToken)
     {

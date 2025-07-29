@@ -10,16 +10,16 @@ using Microsoft.Extensions.Hosting;
 
 namespace AutomationIoC.CommandLine.Binder;
 
-internal class ServiceBinderActivator : IServiceBinderActivator
+internal class AutomationServiceActivator : IAutomationServiceActivator
 {
     private readonly string[] args;
-    private readonly IDictionary<string, string> configurationMapping;
-    private readonly Action<HostBuilderContext, IServiceCollection> buildServices;
     private readonly Action<HostBuilderContext, IConfigurationBuilder> buildConfiguration;
+    private readonly Action<HostBuilderContext, IServiceCollection> buildServices;
+    private readonly IDictionary<string, string> configurationMapping;
 
     private IHost host;
 
-    public ServiceBinderActivator(
+    public AutomationServiceActivator(
         string[] args,
         IDictionary<string, string> configurationMapping,
         Action<HostBuilderContext, IConfigurationBuilder> buildConfiguration,
