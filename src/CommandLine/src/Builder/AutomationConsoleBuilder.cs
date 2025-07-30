@@ -76,12 +76,21 @@ internal class AutomationConsoleBuilder(
         return new AutomationConsoleApplication(rootCommand, args);
     }
 
-    public void ConfigureServices(Action<HostBuilderContext, IServiceCollection> configureServices) =>
+    public IAutomationConsoleBuilder ConfigureServices(Action<HostBuilderContext, IServiceCollection> configureServices)
+    {
         automationContext.SetConfigureServices(configureServices);
+        return this;
+    }
 
-    public void Configure(Action<HostBuilderContext, IConfigurationBuilder> configure) =>
+    public IAutomationConsoleBuilder Configure(Action<HostBuilderContext, IConfigurationBuilder> configure)
+    {
         automationContext.SetConfigure(configure);
+        return this;
+    }
 
-    public void WithConfigurationMapping(IDictionary<string, string> configurationMapping) =>
+    public IAutomationConsoleBuilder WithConfigurationMapping(IDictionary<string, string> configurationMapping)
+    {
         automationContext.SetConfigurationMapping(configurationMapping);
+        return this;
+    }
 }

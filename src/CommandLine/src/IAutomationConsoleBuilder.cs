@@ -26,20 +26,20 @@ public interface IAutomationConsoleBuilder
     ///     Configure configuration for automation console
     /// </summary>
     /// <param name="configure">Configurations for services</param>
-    void Configure(Action<HostBuilderContext, IConfigurationBuilder> configure);
+    IAutomationConsoleBuilder Configure(Action<HostBuilderContext, IConfigurationBuilder> configure);
 
     /// <summary>
     ///     Configure services for automation console
     /// </summary>
     /// <param name="configureServices">Service container configuration</param>
-    void ConfigureServices(Action<HostBuilderContext, IServiceCollection> configureServices);
+    IAutomationConsoleBuilder ConfigureServices(Action<HostBuilderContext, IServiceCollection> configureServices);
 
     /// <summary>
     ///     CConfiguration mapping to use for automation console
     ///     This is used to map command line arguments to configuration keys
     /// </summary>
     /// <param name="configurationMapping">Argument -> Configuration Key Mapping</param>
-    void WithConfigurationMapping(IDictionary<string, string> configurationMapping);
+    IAutomationConsoleBuilder WithConfigurationMapping(IDictionary<string, string> configurationMapping);
 
     /// <summary>
     ///     Finalize command registration and build automation console
